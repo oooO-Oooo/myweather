@@ -2,10 +2,21 @@ package com.simple.myweather.db;
 
 import org.litepal.crud.LitePalSupport;
 
-public class county extends LitePalSupport {
+public class County extends LitePalSupport {
     int id;
     int countyId;
     String countyName;
+    int cityId;
+    String weatherId;
+
+
+    public int getCityId() {
+        return cityId;
+    }
+
+    public void setCityId(int cityId) {
+        this.cityId = cityId;
+    }
 
     public int getId() {
         return id;
@@ -38,6 +49,4 @@ public class county extends LitePalSupport {
     public void setWeatherId(String weatherId) {
         this.weatherId = weatherId;
     }
-
-    String weatherId;
 }

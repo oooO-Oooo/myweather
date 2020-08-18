@@ -2,7 +2,7 @@ package com.simple.myweather.db;
 
 import org.litepal.crud.LitePalSupport;
 
-class Province extends LitePalSupport {
+public class Province extends LitePalSupport {
     int id;
 
     public int getId() {

@@ -6,6 +6,15 @@ public class City extends LitePalSupport {
     int id;
     int cityId;
     String cityName;
+    int provinceId;
+
+    public int getProvinceId() {
+        return provinceId;
+    }
+
+    public void setProvinceId(int provinceId) {
+        this.provinceId = provinceId;
+    }
 
     public int getId() {
         return id;
