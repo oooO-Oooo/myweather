@@ -93,6 +93,7 @@ public class ChooseAreaFragment extends Fragment {
                     intent.putExtra(WeatherActivity.WEATHER_ID,weatherId);
                     intent.putExtra(WeatherActivity.CITY_NAME,countyName);
                     startActivity(intent);
+                    getActivity().finish();
                 }
             }
         });

@@ -3,50 +3,19 @@ package com.simple.myweather.gson;
 import com.google.gson.annotations.SerializedName;
 
 public class Forecast {
-    String date;
-    WeatherCondition conditon;
-    Tmp tmp;
+    public String date;
+    public Tmp tmp;
+    @SerializedName("cond")
+    public WeatherCondition conditon;
 
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    class WeatherCondition {
+    public class WeatherCondition {
         @SerializedName("txt_d")
-        String wether;
-
-        public String getWether() {
-            return wether;
-        }
-
-        public void setWether(String wether) {
-            this.wether = wether;
-        }
+        public String weather;
     }
 
-    class Tmp {
-        String max;
-        String min;
-
-        public String getMax() {
-            return max;
-        }
-
-        public void setMax(String max) {
-            this.max = max;
-        }
-
-        public String getMin() {
-            return min;
-        }
-
-        public void setMin(String min) {
-            this.min = min;
-        }
+    public class Tmp {
+        public String max;
+        public String min;
     }
 
 }
