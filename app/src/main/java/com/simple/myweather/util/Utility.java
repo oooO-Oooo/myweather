@@ -2,9 +2,12 @@ package com.simple.myweather.util;
 
 import android.text.TextUtils;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.simple.myweather.db.City;
 import com.simple.myweather.db.County;
 import com.simple.myweather.db.Province;
+import com.simple.myweather.gson.Weather;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -63,5 +66,19 @@ public class Utility {
             return true;
         }
         return false;
+    }
+
+    // 处理天气数据
+    public static Weather handleWeather(String res) {
+        try {
+            JSONObject object = new JSONObject(res);
+            JSONArray array = object.getJSONArray("HeWeather");
+            Gson gson = new Gson();
+            String weather = array.getJSONObject(0).toString();
+            return gson.fromJson(weather, Weather.class);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

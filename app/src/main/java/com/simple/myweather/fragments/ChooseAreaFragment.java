@@ -1,5 +1,6 @@
 package com.simple.myweather.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,9 +18,11 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.simple.myweather.R;
+import com.simple.myweather.WeatherActivity;
 import com.simple.myweather.db.City;
 import com.simple.myweather.db.County;
 import com.simple.myweather.db.Province;
+import com.simple.myweather.gson.Weather;
 import com.simple.myweather.util.HttpUtil;
 import com.simple.myweather.util.Utility;
 
@@ -53,6 +56,7 @@ public class ChooseAreaFragment extends Fragment {
     List<County> countyList;
     Province selectedProvince;
     City selectedCity;
+    County selectedCounty;
 
     @Nullable
     @Override
@@ -81,6 +85,14 @@ public class ChooseAreaFragment extends Fragment {
                 } else if (LEVEL == CITY_LEVEL) {
                     selectedCity = cityList.get(position);
                     queryCounty();
+                }else if (LEVEL == COUNTY_LEVEL){
+                    selectedCounty = countyList.get(position);
+                    String weatherId = selectedCounty.getWeatherId();
+                    String countyName = selectedCounty.getCountyName();
+                    Intent intent = new Intent(getContext(), WeatherActivity.class);
+                    intent.putExtra(WeatherActivity.WEATHER_ID,weatherId);
+                    intent.putExtra(WeatherActivity.CITY_NAME,countyName);
+                    startActivity(intent);
                 }
             }
         });
@@ -100,6 +112,7 @@ public class ChooseAreaFragment extends Fragment {
         queryProvince();
     }
 
+    // 查询省级列表
     void queryProvince() {
         titleText.setText("中国");
         backbtn.setVisibility(View.GONE);
@@ -155,6 +168,7 @@ public class ChooseAreaFragment extends Fragment {
         }
     }
 
+    // 从服务器查询数据 并处理
     private void queryProvinceFromServer(String addr, final String type) {
 
         HttpUtil.sendOKHttpRequest(addr, new Callback() {

@@ -6,9 +6,9 @@ import java.util.List;
 
 public class Weather {
     public Aqi aqi;
-    public Basic basic;
-    public Forecast forecast;
     public Now now;
+    public Basic basic;
     @SerializedName("daily_forecast")
-    public List<Suggestion> suggestions;
+    public List<Forecast> forecast;
+    public Suggestion suggestion;
 }
