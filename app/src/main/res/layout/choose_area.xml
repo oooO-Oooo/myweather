@@ -7,7 +7,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary">
+        android:background="#90A4AE">
 
         <Button
             android:id="@+id/back"
@@ -21,12 +21,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="China"
-            android:textColor="#ffffff"
             android:textSize="25sp"/>
     </RelativeLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/colorPrimaryDark"/>
+
     <ListView
+        android:background="#ffffff"
         android:id="@+id/choose_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

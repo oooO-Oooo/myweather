@@ -6,7 +6,7 @@ public class Basic {
     @SerializedName("city")
     public String cityName;
     @SerializedName("cid")
-    public String WeatherId;
+    public String weatherId;
 
     public Update update;
     public class Update{

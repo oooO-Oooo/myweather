@@ -1,7 +1,10 @@
 package com.simple.myweather.fragments;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.service.chooser.ChooserTargetService;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.simple.myweather.MainActivity;
 import com.simple.myweather.R;
 import com.simple.myweather.WeatherActivity;
 import com.simple.myweather.db.City;
@@ -89,11 +93,27 @@ public class ChooseAreaFragment extends Fragment {
                     selectedCounty = countyList.get(position);
                     String weatherId = selectedCounty.getWeatherId();
                     String countyName = selectedCounty.getCountyName();
-                    Intent intent = new Intent(getContext(), WeatherActivity.class);
-                    intent.putExtra(WeatherActivity.WEATHER_ID,weatherId);
-                    intent.putExtra(WeatherActivity.CITY_NAME,countyName);
-                    startActivity(intent);
-                    getActivity().finish();
+
+                    SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(getContext()).edit();
+                    edit.putString(WeatherActivity.CITY_NAME,countyName);
+                    edit.putString(WeatherActivity.WEATHER_ID,weatherId);
+                    edit.apply();
+
+                    //如果当前是MainActivity，点击就跳转到WeatherActivity，如果不是就关闭抽屉，并执行查询
+                    if (getActivity() instanceof MainActivity){
+                        Intent intent = new Intent(getContext(), WeatherActivity.class);
+                        startActivity(intent);
+                        getActivity().finish();
+                    }else if (getActivity() instanceof WeatherActivity){
+
+                        // 在fragment中获取Activity实例，并且调用Activity的方法和属性，注意public
+                        WeatherActivity activity = (WeatherActivity) getActivity();
+                        activity.drawerLayout.closeDrawers();
+                        activity.refreshLayout.setRefreshing(true);
+                        activity.countyName = countyName;
+                        activity.weatherId = weatherId;
+                        activity.dataFromServer();
+                    }
                 }
             }
         });
@@ -115,7 +135,7 @@ public class ChooseAreaFragment extends Fragment {
 
     // 查询省级列表
     void queryProvince() {
-        titleText.setText("中国");
+        titleText.setText("请选择");
         backbtn.setVisibility(View.GONE);
         provinceList = LitePal.findAll(Province.class);
         if (provinceList.size() > 0) {
@@ -141,7 +161,6 @@ public class ChooseAreaFragment extends Fragment {
             for (City city : cityList) {
                 dataList.add(city.getCityName());
             }
-            Log.d(TAG, "-----result-----" + "\n" + dataList);
             adapter.notifyDataSetChanged();
             areaList.setSelection(0);
             LEVEL = CITY_LEVEL;

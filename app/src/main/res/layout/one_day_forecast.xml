@@ -3,7 +3,6 @@
     android:layout_width="0dp"
     android:layout_height="wrap_content"
     android:layout_weight="1"
-    android:background="#F8BBD0"
     android:gravity="center"
     android:orientation="vertical">
 
@@ -11,7 +10,8 @@
         android:id="@+id/text_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="日期" />
+        android:text="日期"
+        android:textColor="#ffffff" />
 
     <ImageView
         android:id="@+id/icon_condition"
@@ -25,13 +25,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="30" />
+        android:text="30"
+        android:textColor="#ffffff" />
 
     <TextView
         android:id="@+id/text_min"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="20" />
+        android:text="20"
+        android:textColor="#ffffff" />
 
 </LinearLayout>
