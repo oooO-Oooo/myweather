@@ -30,6 +30,7 @@ import com.simple.myweather.gson.Forecast;
 import com.simple.myweather.gson.Suggestion;
 import com.simple.myweather.gson.Weather;
 import com.simple.myweather.service.Api;
+import com.simple.myweather.service.AutoUpdateService;
 import com.simple.myweather.util.DateToWeek;
 import com.simple.myweather.util.HttpUtil;
 import com.simple.myweather.util.Utility;
@@ -48,7 +49,7 @@ import okhttp3.Callback;
 import okhttp3.Response;
 import okhttp3.internal.Util;
 
-public class WeatherActivity extends AppCompatActivity{
+public class WeatherActivity extends AppCompatActivity {
 
     private static final String TAG = "WeatherActivity";
     public static final String CITY_NAME = "city_name";
@@ -77,7 +78,7 @@ public class WeatherActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather);
 
-        if (Build.VERSION.SDK_INT>=21){
+        if (Build.VERSION.SDK_INT >= 21) {
             View view = getWindow().getDecorView();
             int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN
                     | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
@@ -109,7 +110,7 @@ public class WeatherActivity extends AppCompatActivity{
         forecastLayout = findViewById(R.id.forecast);
         backImg = findViewById(R.id.back_ground);
 
-        refreshLayout.setColorSchemeColors(Color.RED,Color.GREEN,Color.YELLOW);
+        refreshLayout.setColorSchemeColors(Color.RED, Color.GREEN, Color.YELLOW);
 
         //打开抽屉
         switchBtn.setOnClickListener(new View.OnClickListener() {
@@ -122,9 +123,9 @@ public class WeatherActivity extends AppCompatActivity{
         // 从SharedPreference读取数据，如果有就使用本地数据，如果没有就访问网络
         SharedPreferences editor = PreferenceManager.getDefaultSharedPreferences(this);
         String data = editor.getString("weather", null);
-        String imgUrl = editor.getString("imgUrl",null);
-        countyName = editor.getString(CITY_NAME,null);
-        weatherId = editor.getString(WEATHER_ID,null);
+        String imgUrl = editor.getString("imgUrl", null);
+        countyName = editor.getString(CITY_NAME, null);
+        weatherId = editor.getString(WEATHER_ID, null);
 
         if (data != null) {
             Weather weather = Utility.handleWeather(data);
@@ -134,9 +135,9 @@ public class WeatherActivity extends AppCompatActivity{
         }
 
         // 加载背景图片
-        if (imgUrl != null){
+        if (imgUrl != null) {
             Glide.with(this).load(imgUrl).into(backImg);
-        }else{
+        } else {
             loadImgFromServer();
         }
         mTitle.setText(countyName);
@@ -163,9 +164,9 @@ public class WeatherActivity extends AppCompatActivity{
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                final String res= response.body().string();
+                final String res = response.body().string();
                 SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(WeatherActivity.this).edit();
-                editor.putString("imgUrl",res);
+                editor.putString("imgUrl", res);
                 editor.apply();
                 runOnUiThread(new Runnable() {
                     @Override
@@ -206,6 +207,10 @@ public class WeatherActivity extends AppCompatActivity{
                             editor.putString("weather", res);
                             editor.apply();
                             weatherInfo(weather);
+
+                            //启动后台数据更新服务
+                            Intent intent = new Intent(WeatherActivity.this, AutoUpdateService.class);
+                            startService(intent);
                         } else {
                             Toast.makeText(WeatherActivity.this, "获取天气失败", Toast.LENGTH_SHORT).show();
                         }
@@ -254,7 +259,7 @@ public class WeatherActivity extends AppCompatActivity{
         forecastLayout.removeAllViews();
         for (int i = 0; i < weather.forecast.size(); i++) {
             Forecast forecast = weather.forecast.get(i);
-            String kForecastDate, kForecastMax, kForecastMin, kWeather,weekDay = null;
+            String kForecastDate, kForecastMax, kForecastMin, kWeather, weekDay = null;
             View view = LayoutInflater.from(this).inflate(R.layout.one_day_forecast, forecastLayout, false);
             TextView mForecastDate, mForecastMax, mForecastMin;
             ImageView mForecastIcon;
